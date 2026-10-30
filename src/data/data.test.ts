@@ -31,6 +31,7 @@ it('contact links match the spec', () => {
   ])
 })
 
-it('the first project is TEMPR', () => {
-  expect(projects[0].liveUrl).toBe('https://0xmattyic333.github.io/wolfeepackk_temprgg/')
+// Checks TEMPR is listed anywhere, so adding new projects at the top never breaks this.
+it('the TEMPR project is listed', () => {
+  expect(projects.map((p) => p.liveUrl)).toContain('https://0xmattyic333.github.io/wolfeepackk_temprgg/')
 })

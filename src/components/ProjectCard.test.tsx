@@ -41,3 +41,9 @@ it('omits the Live site link when the project has no liveUrl', () => {
   expect(screen.queryByRole('link', { name: /Live site/ })).not.toBeInTheDocument()
   expect(screen.getByRole('link', { name: /Code/ })).toBeInTheDocument()
 })
+
+// Banners are wide (about 1500x500, 3:1). The image frame must match that shape or the sides get cut off.
+it('frames the project image at a 3:1 banner shape', () => {
+  render(<ProjectCard project={project} />)
+  expect(screen.getByRole('img', { name: 'Demo screenshot' })).toHaveClass('aspect-[3/1]')
+})

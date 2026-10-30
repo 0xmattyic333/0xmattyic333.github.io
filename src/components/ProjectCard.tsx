@@ -12,7 +12,7 @@ function ProjectCard({ project }: ProjectCardProps) {
         src={project.image}
         alt={project.imageAlt}
         loading="lazy"
-        className="aspect-video w-full object-cover"
+        className="aspect-[3/1] w-full object-cover"
       />
       <div className="p-5">
         <h3 className="text-lg font-bold text-white">{project.title}</h3>
