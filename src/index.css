@@ -8,6 +8,15 @@
   --color-neon-sky: #60a5fa;
   --color-neon-violet: #a78bfa;
   --color-muted: #94a3b8;
+
+  /* Gives us the class animate-marquee (used by the logo strip). */
+  --animate-marquee: marquee 40s linear infinite;
+
+  @keyframes marquee {
+    to {
+      transform: translateX(calc(-50% - 1.5rem)); /* one copy + half the gap between copies */
+    }
+  }
 }
 
 /* Smooth-scroll the nav links, but only for people who haven't asked for less motion. */

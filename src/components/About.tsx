@@ -1,4 +1,5 @@
 import { skills } from '../data/skills'
+import LogoMarquee from './LogoMarquee'
 import Section from './Section'
 
 function About() {
@@ -11,6 +12,9 @@ function About() {
         These days I spend my time going deep on both: shipping web projects and earning IBM Z
         certifications. I'm open to freelance work.
       </p>
+      <div className="mt-10">
+        <LogoMarquee />
+      </div>
       <ul className="mt-8 flex flex-wrap gap-2">
         {skills.map((skill) => (
           <li
