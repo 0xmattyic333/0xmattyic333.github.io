@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+/* Theme colors, taken from the avatar. Defining them here means Tailwind
+   creates classes like bg-ink, text-neon, and border-neon-violet for us. */
+@theme {
+  --color-ink: #0a0b1e;
+  --color-neon: #3b82f6;
+  --color-neon-sky: #60a5fa;
+  --color-neon-violet: #a78bfa;
+  --color-muted: #94a3b8;
+}
+
+/* Smooth-scroll the nav links, but only for people who haven't asked for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  @apply bg-ink text-slate-200 antialiased;
+}
