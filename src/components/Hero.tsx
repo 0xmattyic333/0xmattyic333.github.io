@@ -1,5 +1,14 @@
 import Section from './Section'
 import Terminal from './Terminal'
+import TypingLine from './TypingLine'
+
+// Defined outside the component so the array isn't recreated (and the typing restarted) on every render.
+const phrases = [
+  'building React apps',
+  'writing COBOL & REXX',
+  'automating z/OS with Ansible',
+  'deploying smart contracts',
+]
 import { focusRing } from './styles'
 
 function Hero() {
@@ -25,6 +34,7 @@ function Hero() {
             <p className="mt-2 bg-gradient-to-r from-neon-sky to-neon-violet bg-clip-text text-2xl font-bold text-transparent sm:text-3xl">
               I build for the web, and I speak mainframe.
             </p>
+            <TypingLine phrases={phrases} />
             <div className="mt-8 flex flex-wrap justify-center gap-3 md:justify-start">
               <a
                 href="#projects"
