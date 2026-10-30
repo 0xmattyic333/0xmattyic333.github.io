@@ -29,7 +29,7 @@ function ProjectCard({ project }: ProjectCardProps) {
               </li>
             ))}
           </ul>
-          <div className="mt-5 flex gap-4 text-sm font-semibold">
+          <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold">
             {/* `&&` renders the link only when the URL exists, so there are no dead links. */}
             {project.liveUrl && (
               <a
@@ -49,6 +49,16 @@ function ProjectCard({ project }: ProjectCardProps) {
                 Code →
               </a>
             )}
+            {project.links?.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                {...externalLink}
+                className={`text-neon-sky hover:text-white ${focusRing}`}
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
         </div>
       </article>

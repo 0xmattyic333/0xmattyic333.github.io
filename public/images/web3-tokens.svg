@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 500" width="1500" height="500" role="img" aria-label="Two neon token coins labelled RAR and LIL">
+  <defs>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="60"/></filter>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="10"/></filter>
+    <radialGradient id="poly" cx="0.35" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#c4b5fd"/><stop offset="0.55" stop-color="#8247e5"/><stop offset="1" stop-color="#3b1d7a"/>
+    </radialGradient>
+    <radialGradient id="base" cx="0.35" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#93c5fd"/><stop offset="0.55" stop-color="#0052ff"/><stop offset="1" stop-color="#0a2a80"/>
+    </radialGradient>
+  </defs>
+  <rect width="1500" height="500" fill="#0a0b1e"/>
+  <circle cx="560" cy="250" r="190" fill="#7c3aed" opacity="0.35" filter="url(#blur)"/>
+  <circle cx="940" cy="250" r="190" fill="#2563eb" opacity="0.35" filter="url(#blur)"/>
+  <!-- faint chain links between the coins -->
+  <g fill="none" stroke="#60a5fa" stroke-opacity="0.35" stroke-width="6">
+    <rect x="690" y="232" width="60" height="36" rx="18"/>
+    <rect x="740" y="232" width="60" height="36" rx="18"/>
+  </g>
+  <!-- RAR / Polygon coin -->
+  <circle cx="560" cy="250" r="150" fill="none" stroke="#a78bfa" stroke-width="10" filter="url(#glow)"/>
+  <circle cx="560" cy="250" r="145" fill="url(#poly)"/>
+  <circle cx="560" cy="250" r="118" fill="none" stroke="#ede9fe" stroke-opacity="0.45" stroke-width="3" stroke-dasharray="4 10"/>
+  <text x="560" y="272" text-anchor="middle" font-family="'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="64" font-weight="800" fill="#ffffff">RAR</text>
+  <text x="560" y="450" text-anchor="middle" font-family="'Courier New', monospace" font-size="28" font-weight="700" letter-spacing="6" fill="#a78bfa">POLYGON</text>
+  <!-- LIL / Base coin -->
+  <circle cx="940" cy="250" r="150" fill="none" stroke="#60a5fa" stroke-width="10" filter="url(#glow)"/>
+  <circle cx="940" cy="250" r="145" fill="url(#base)"/>
+  <circle cx="940" cy="250" r="118" fill="none" stroke="#dbeafe" stroke-opacity="0.45" stroke-width="3" stroke-dasharray="4 10"/>
+  <text x="940" y="272" text-anchor="middle" font-family="'Segoe UI', -apple-system, Helvetica, Arial, sans-serif" font-size="64" font-weight="800" fill="#ffffff">LIL</text>
+  <text x="940" y="450" text-anchor="middle" font-family="'Courier New', monospace" font-size="28" font-weight="700" letter-spacing="6" fill="#60a5fa">BASE</text>
+  <text x="750" y="70" text-anchor="middle" font-family="'Courier New', monospace" font-size="24" letter-spacing="8" fill="#94a3b8">ERC-20 · EVM</text>
+</svg>

@@ -42,8 +42,26 @@ it('omits the Live site link when the project has no liveUrl', () => {
   expect(screen.getByRole('link', { name: /Code/ })).toBeInTheDocument()
 })
 
-// Banners are wide (about 1500x500, 3:1). The image frame must match that shape or the sides get cut off.
-it('frames the project image at a 3:1 banner shape', () => {
-  render(<ProjectCard project={project} />)
+// Without captured device media, a project shows its own image in a wide 3:1 frame.
+it('shows the project image in a 3:1 frame when there is no device media', () => {
+  render(<ProjectCard project={{ ...project, media: undefined }} />)
   expect(screen.getByRole('img', { name: 'Demo screenshot' })).toHaveClass('aspect-[3/1]')
+})
+
+it('renders extra links, each opening in a new tab', () => {
+  render(
+    <ProjectCard
+      project={{
+        ...project,
+        links: [
+          { label: 'RAR on PolygonScan →', href: 'https://polygonscan.com/token/0x1' },
+          { label: 'LIL on BaseScan →', href: 'https://basescan.org/token/0x2' },
+        ],
+      }}
+    />,
+  )
+  const rar = screen.getByRole('link', { name: 'RAR on PolygonScan →' })
+  expect(rar).toHaveAttribute('href', 'https://polygonscan.com/token/0x1')
+  expect(rar).toHaveAttribute('target', '_blank')
+  expect(screen.getByRole('link', { name: 'LIL on BaseScan →' })).toBeInTheDocument()
 })
