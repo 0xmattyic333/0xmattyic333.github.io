@@ -1,0 +1,45 @@
+# GitHub Actions workflow: every push to main tests, builds, and publishes the site.
+# You can watch it run under the repo's "Actions" tab.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]   # run on every push to main
+  workflow_dispatch:   # also allow a manual "Run workflow" button
+
+# Pages needs permission to publish, and id-token proves the deploy came from this repo.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# If you push twice quickly, finish one deploy before starting the next.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7          # download the repo's code
+      - uses: actions/setup-node@v7        # install Node.js
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci                        # install exact versions from package-lock.json
+      - run: npm test                      # stop here if any test fails, so a broken site never ships
+      - run: npm run build                 # type-check and build into dist/
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist                       # hand the built site to the deploy job
+
+  deploy:
+    needs: build                           # only runs if build succeeded
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5      # publish to https://0xmattyic333.github.io/
