@@ -8,7 +8,7 @@ function About() {
       <p className="max-w-2xl text-lg leading-relaxed text-slate-300">
         I'm Matthew, a developer who builds fast, modern websites with React and TypeScript, and who
         also works on IBM Z mainframes: COBOL, REXX, JCL, and automation with Ansible and Zowe. I like
-        taking an idea from blank page to live site, and I'm always learning something new.
+        taking an idea from blank page to live site 🕸️ 👨🏼‍💻, and I'm always learning something new 📚.
       </p>
       <ul className="mt-8 flex flex-wrap gap-2">
         {skills.map((skill) => (
