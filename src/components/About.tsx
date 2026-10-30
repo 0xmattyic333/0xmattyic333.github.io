@@ -9,8 +9,9 @@ function About() {
         I got into coding when I realized that every system is built on code, from the COBOL running
         behind banks to the websites we use every day. I build modern sites with React and
         TypeScript, and I'm drawn to mainframes because that's where most of the world's data flows.
-        These days I spend my time going deep on both: shipping web projects and earning IBM Z
-        certifications. I'm open to freelance work.
+        I've also deployed my own ERC-20 tokens on Polygon and Base, and I'm working toward building
+        on Solana. These days I spend my time going deep on all three: shipping web projects, earning
+        IBM Z certifications, and experimenting on-chain. I'm open to freelance work.
       </p>
       <div className="mt-10">
         <LogoMarquee />

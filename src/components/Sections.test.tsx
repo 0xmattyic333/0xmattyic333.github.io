@@ -24,6 +24,8 @@ describe('About', () => {
     render(<About />)
     expect(screen.getByText(/every system is built on code/)).toBeInTheDocument()
     expect(screen.getByText(/where most of the world's data flows/)).toBeInTheDocument()
+    expect(screen.getByText(/deployed my own ERC-20 tokens on Polygon and Base/)).toBeInTheDocument()
+    expect(screen.getByText(/working toward building on Solana/)).toBeInTheDocument()
   })
 
   it('shows every skill tag', () => {
