@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { usePrefersReducedMotion } from '../lib/motion'
+import { useEffect, useRef, useState } from 'react'
+import { useIsVisible, usePrefersReducedMotion } from '../lib/motion'
 
 const TYPE_MS = 60
 const HOLD_MS = 1400
@@ -12,16 +12,21 @@ type TypingLineProps = {
 // Types a phrase, holds it, erases it, then moves to the next one, forever.
 function TypingLine({ phrases }: TypingLineProps) {
   const reducedMotion = usePrefersReducedMotion()
+  const lineRef = useRef<HTMLParagraphElement>(null)
+  const visible = useIsVisible(lineRef)
   const [text, setText] = useState('')
+  // Where the typing is, kept in a ref so pausing and resuming picks up where it left off:
+  // which phrase, how many of its characters are showing, and whether we're erasing.
+  const position = useRef({ index: 0, length: 0, erasing: false })
 
   useEffect(() => {
-    if (reducedMotion) return
+    // Hold still for reduced motion, and pause while off screen or in a hidden tab.
+    if (reducedMotion || !visible) return
     let timer: ReturnType<typeof setTimeout>
-    let index = 0 // which phrase
-    let length = 0 // how many of its characters are showing
-    let erasing = false
+    const pos = position.current
 
     function tick() {
+      let { index, length, erasing } = pos
       const phrase = phrases[index]
       if (!erasing && length < phrase.length) {
         length += 1
@@ -37,15 +42,16 @@ function TypingLine({ phrases }: TypingLineProps) {
         index = (index + 1) % phrases.length
         timer = setTimeout(tick, TYPE_MS)
       }
+      Object.assign(pos, { index, length, erasing })
       setText(phrases[index].slice(0, length))
     }
 
     tick()
     return () => clearTimeout(timer)
-  }, [reducedMotion, phrases])
+  }, [reducedMotion, visible, phrases])
 
   return (
-    <p className="mt-3 font-mono text-sm text-indigo-200 sm:text-base">
+    <p ref={lineRef} className="mt-3 font-mono text-sm text-indigo-200 sm:text-base">
       {/* The animated text is hidden from screen readers so they don't read every keystroke. */}
       <span aria-hidden="true">
         <span className="text-neon-violet">&gt; </span>

@@ -1,7 +1,7 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Tilt from './Tilt'
-import { mockMedia, resetMedia } from '../test/media'
+import { mockLiveMedia, mockMedia, resetMedia } from '../test/media'
 
 afterEach(resetMedia)
 
@@ -49,4 +49,11 @@ it('keeps links inside clickable', async () => {
   const { onClick } = setup()
   await userEvent.click(screen.getByText('inside'))
   expect(onClick).toHaveBeenCalled()
+})
+
+it('survives a mouse being connected or removed while the page is open', () => {
+  const change = mockLiveMedia({ canHover: false })
+  setup()
+  expect(() => act(() => change({ canHover: true }))).not.toThrow()
+  expect(() => act(() => change({ canHover: false }))).not.toThrow()
 })

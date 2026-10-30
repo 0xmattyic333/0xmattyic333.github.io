@@ -9,7 +9,10 @@ type TiltProps = {
 // Leans its content toward the mouse pointer in 3D. Mouse/trackpad only:
 // on touchscreens or with reduced motion it simply renders its children.
 function Tilt({ children, max = 6 }: TiltProps) {
-  const enabled = useCanHover() && !usePrefersReducedMotion()
+  // Call both hooks every render (never inside `&&`): React requires hooks in the same order each time.
+  const canHover = useCanHover()
+  const reducedMotion = usePrefersReducedMotion()
+  const enabled = canHover && !reducedMotion
   const [transform, setTransform] = useState('')
 
   function onPointerMove(event: PointerEvent<HTMLDivElement>) {

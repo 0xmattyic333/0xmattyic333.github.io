@@ -40,7 +40,7 @@ body {
 .glow-drift {
   animation: glow-drift 20s ease-in-out infinite;
 }
-/* Reduced motion: park the glow near the top-centre. */
+/* Reduced motion: park the glow near the top-centre. 240px = half of SIZE in CursorGlow.tsx. */
 .glow-static {
   transform: translate3d(calc(50vw - 240px), 0, 0);
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type RefObject } from 'react'
 
 // Media queries the browser answers for us:
 //  - reduced motion: the visitor asked their device for less animation.
@@ -28,4 +28,28 @@ export function usePrefersReducedMotion(): boolean {
 
 export function useCanHover(): boolean {
   return useMediaQuery(CAN_HOVER)
+}
+
+// True while `ref`'s element is on screen AND the browser tab is visible.
+// Animations use it to stop doing work nobody can see (saves battery on phones).
+// Assumes visible when the browser can't tell us (no IntersectionObserver).
+export function useIsVisible(ref: RefObject<Element | null>): boolean {
+  const [onScreen, setOnScreen] = useState(true)
+  const [tabVisible, setTabVisible] = useState(() => !document.hidden)
+
+  useEffect(() => {
+    const element = ref.current
+    if (!element || !('IntersectionObserver' in window)) return
+    const observer = new IntersectionObserver(([entry]) => setOnScreen(entry.isIntersecting))
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [ref])
+
+  useEffect(() => {
+    const onChange = () => setTabVisible(!document.hidden)
+    document.addEventListener('visibilitychange', onChange)
+    return () => document.removeEventListener('visibilitychange', onChange)
+  }, [])
+
+  return onScreen && tabVisible
 }

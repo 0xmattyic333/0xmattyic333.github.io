@@ -18,15 +18,16 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
+// The moving light itself (inside the clipping frame).
 function glow(container: HTMLElement) {
-  return container.firstElementChild as HTMLElement
+  return container.querySelector('[data-glow]') as HTMLElement
 }
 
 it('is decorative and never blocks clicks', () => {
   mockMedia({ canHover: true })
   const { container } = render(<CursorGlow />)
-  expect(glow(container)).toHaveAttribute('aria-hidden', 'true')
-  expect(glow(container)).toHaveClass('pointer-events-none')
+  expect(container.firstElementChild).toHaveAttribute('aria-hidden', 'true')
+  expect(container.firstElementChild).toHaveClass('pointer-events-none')
 })
 
 it('stays still and ignores the pointer when reduced motion is preferred', () => {
@@ -57,4 +58,15 @@ it('does no animation work while the tab is hidden', () => {
   vi.spyOn(document, 'hidden', 'get').mockReturnValue(true)
   fireEvent.pointerMove(window, { clientX: 300, clientY: 200 })
   expect(rafSpy).not.toHaveBeenCalled()
+})
+
+// The light drifts past the right edge on a 360px phone; a fixed, clipped frame stops
+// it from ever widening the page (iOS Safari can count fixed elements as overflow).
+it('is clipped to the screen so it can never cause sideways scrolling', () => {
+  mockMedia({ canHover: false })
+  const { container } = render(<CursorGlow />)
+  const frame = container.firstElementChild as HTMLElement
+  expect(frame).toHaveClass('fixed', 'inset-0', 'overflow-hidden', 'pointer-events-none')
+  expect(frame).toHaveAttribute('aria-hidden', 'true')
+  expect(frame).toContainElement(glow(container))
 })

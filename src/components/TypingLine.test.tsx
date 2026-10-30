@@ -1,5 +1,6 @@
 import { act, render, screen } from '@testing-library/react'
 import TypingLine from './TypingLine'
+import { mockIntersection, resetIntersection } from '../test/media'
 
 const phrases = ['building React apps', 'writing COBOL & REXX']
 
@@ -39,4 +40,34 @@ it('gives screen readers every phrase without announcing each keystroke', () => 
   mockReducedMotion(false)
   render(<TypingLine phrases={phrases} />)
   for (const phrase of phrases) expect(screen.getByText(phrase)).toHaveClass('sr-only')
+})
+
+it('pauses while scrolled off screen', () => {
+  mockReducedMotion(false)
+  const setOnScreen = mockIntersection()
+  vi.useFakeTimers()
+  const { container } = render(<TypingLine phrases={phrases} />)
+  act(() => setOnScreen(false))
+  const before = container.querySelector('[aria-hidden="true"]')!.textContent
+  act(() => {
+    vi.advanceTimersByTime(5000)
+  })
+  expect(container.querySelector('[aria-hidden="true"]')!.textContent).toBe(before)
+  resetIntersection()
+})
+
+it('pauses while the browser tab is hidden', () => {
+  mockReducedMotion(false)
+  vi.useFakeTimers()
+  const hidden = vi.spyOn(document, 'hidden', 'get').mockReturnValue(true)
+  const { container } = render(<TypingLine phrases={phrases} />)
+  act(() => {
+    document.dispatchEvent(new Event('visibilitychange'))
+  })
+  const before = container.querySelector('[aria-hidden="true"]')!.textContent
+  act(() => {
+    vi.advanceTimersByTime(5000)
+  })
+  expect(container.querySelector('[aria-hidden="true"]')!.textContent).toBe(before)
+  hidden.mockRestore()
 })

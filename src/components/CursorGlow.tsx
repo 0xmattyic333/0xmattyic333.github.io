@@ -42,13 +42,17 @@ function CursorGlow() {
   const mode = reducedMotion ? 'glow-static' : canHover ? '' : 'glow-drift'
 
   return (
-    <div
-      ref={ref}
-      aria-hidden="true"
-      style={{ width: SIZE, height: SIZE }}
-      // The CSS transition smooths the movement, so the glow eases after the pointer.
-      className={`pointer-events-none fixed top-0 left-0 -z-10 rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.18),transparent_65%)] transition-transform duration-300 ease-out ${mode}`}
-    />
+    // A fixed, clipped frame: the light can wander past the screen edge without
+    // ever making the page scroll sideways (iOS Safari can count it as overflow).
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+      <div
+        ref={ref}
+        data-glow
+        style={{ width: SIZE, height: SIZE }}
+        // The CSS transition smooths the movement, so the glow eases after the pointer.
+        className={`absolute top-0 left-0 rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.18),transparent_65%)] transition-transform duration-300 ease-out ${mode}`}
+      />
+    </div>
   )
 }
 

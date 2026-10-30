@@ -1,6 +1,7 @@
 import { act, render, screen } from '@testing-library/react'
 import Terminal from './Terminal'
 import { terminalScript } from '../data/terminal'
+import { mockIntersection, resetIntersection } from '../test/media'
 
 function mockReducedMotion(reduce: boolean) {
   window.matchMedia = vi.fn((query: string) => ({
@@ -53,4 +54,23 @@ it('uses a phone-sized font that fits each line without mid-word breaks', () => 
   const screenEl = container.querySelector('pre')!
   expect(screenEl).toHaveClass('text-[11px]')
   expect(screenEl).not.toHaveClass('break-all')
+})
+
+it('pauses while scrolled off screen, and resumes when back', () => {
+  mockReducedMotion(false)
+  const setOnScreen = mockIntersection()
+  vi.useFakeTimers()
+  const { container } = render(<Terminal />)
+  const screenEl = container.querySelector('[aria-hidden="true"]')!
+  act(() => setOnScreen(false))
+  act(() => {
+    vi.advanceTimersByTime(6000)
+  })
+  expect(screenEl.textContent).not.toContain('MAXCC=0000')
+  act(() => setOnScreen(true))
+  act(() => {
+    vi.advanceTimersByTime(6000)
+  })
+  expect(screenEl.textContent).toContain('MAXCC=0000')
+  resetIntersection()
 })

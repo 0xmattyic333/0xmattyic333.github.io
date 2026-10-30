@@ -41,18 +41,23 @@ const laptop = await browser.newContext({
   recordVideo: { dir: workDir, size: { width: 1440, height: 900 } },
 })
 const page = await laptop.newPage()
+const recordingStarted = Date.now() // the video starts recording when the page is created
 await page.goto(url, { waitUntil: 'load' }) // not 'networkidle': live embeds (streams) never go idle
 await page.waitForTimeout(2500)
 await page.screenshot({ path: join(workDir, 'poster.png') })
 const height = await page.evaluate(() => document.documentElement.scrollHeight - innerHeight)
-const steps = 60
+// Note when scrolling starts and ends, so the clip is trimmed to just the motion
+// (no frozen page-loading time at the start).
+const scrollStart = (Date.now() - recordingStarted) / 1000
+const steps = 50
 for (let i = 0; i < steps; i++) {
   await page.mouse.wheel(0, height / steps)
-  await page.waitForTimeout(90)
+  await page.waitForTimeout(100) // ~5s down
 }
-await page.waitForTimeout(500)
+await page.waitForTimeout(400)
 await page.evaluate(() => scrollTo({ top: 0, behavior: 'smooth' }))
-await page.waitForTimeout(1200)
+await page.waitForTimeout(1600) // back to the top, so the loop restarts seamlessly
+const scrollEnd = (Date.now() - recordingStarted) / 1000
 await laptop.close() // finishes writing the video file
 
 // --- Phone: a still of the top of the page at iPhone size. ---
@@ -66,9 +71,10 @@ await browser.close()
 // --- Compress with ffmpeg. ---
 const raw = join(workDir, readdirSync(workDir).find((f) => f.endsWith('.webm')))
 const ff = (...args) => execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...args])
-const scale = ['-vf', 'scale=960:-2', '-t', '8', '-an']
-ff('-ss', '0.8', '-i', raw, ...scale, '-c:v', 'libvpx-vp9', '-crf', '42', '-b:v', '0', join(outDir, 'laptop.webm'))
-ff('-ss', '0.8', '-i', raw, ...scale, '-c:v', 'libx264', '-crf', '30', '-preset', 'slow', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', join(outDir, 'laptop.mp4'))
+const clip = ['-ss', scrollStart.toFixed(2), '-t', Math.min(scrollEnd - scrollStart, 9).toFixed(2)]
+const scale = ['-vf', 'scale=960:-2', '-an']
+ff(...clip, '-i', raw, ...scale, '-c:v', 'libvpx-vp9', '-crf', '42', '-b:v', '0', join(outDir, 'laptop.webm'))
+ff(...clip, '-i', raw, ...scale, '-c:v', 'libx264', '-crf', '30', '-preset', 'slow', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', join(outDir, 'laptop.mp4'))
 ff('-i', join(workDir, 'poster.png'), '-vf', 'scale=960:-2', '-q:v', '5', join(outDir, 'laptop.jpg'))
 ff('-i', join(workDir, 'phone.png'), '-vf', 'scale=390:-2', '-q:v', '5', join(outDir, 'phone.jpg'))
 rmSync(workDir, { recursive: true, force: true })

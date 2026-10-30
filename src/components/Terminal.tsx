@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { terminalScript, type TerminalLine } from '../data/terminal'
-import { usePrefersReducedMotion } from '../lib/motion'
+import { useIsVisible, usePrefersReducedMotion } from '../lib/motion'
 
 const TYPE_MS = 45 // per character, for typed lines
 const LINE_MS = 420 // pause before each output line appears
@@ -20,21 +20,29 @@ type Progress = { done: number; typing: number }
 
 function Terminal() {
   const reducedMotion = usePrefersReducedMotion()
+  const figureRef = useRef<HTMLElement>(null)
+  const visible = useIsVisible(figureRef)
   const [progress, setProgress] = useState<Progress>({ done: 0, typing: 0 })
+  // The live position, kept in a ref so pausing and resuming picks up where it left off.
+  const position = useRef<Progress>({ done: 0, typing: 0 })
 
   useEffect(() => {
-    if (reducedMotion) return
+    // Hold still for reduced motion, and pause while off screen or in a hidden tab.
+    if (reducedMotion || !visible) return
     // Each step schedules the next with setTimeout; cleanup cancels whichever is pending.
     let timer: ReturnType<typeof setTimeout>
-    let done = 0
-    let typing = 0
+    let { done, typing } = position.current
+    const show = () => {
+      position.current = { done, typing }
+      setProgress({ done, typing })
+    }
 
     function step() {
       if (done >= terminalScript.length) {
         timer = setTimeout(() => {
           done = 0
           typing = 0
-          setProgress({ done, typing })
+          show()
           step()
         }, LOOP_PAUSE_MS)
         return
@@ -42,21 +50,21 @@ function Terminal() {
       const line = terminalScript[done]
       if (line.typed && typing < line.text.length) {
         typing += 1
-        setProgress({ done, typing })
+        show()
         timer = setTimeout(step, TYPE_MS)
         return
       }
       timer = setTimeout(() => {
         done += 1
         typing = 0
-        setProgress({ done, typing })
+        show()
         step()
       }, LINE_MS)
     }
 
     step()
     return () => clearTimeout(timer)
-  }, [reducedMotion])
+  }, [reducedMotion, visible])
 
   // With reduced motion, skip straight to the finished job.
   const { done, typing } = reducedMotion ? { done: terminalScript.length, typing: 0 } : progress
@@ -64,6 +72,7 @@ function Terminal() {
 
   return (
     <figure
+      ref={figureRef}
       aria-label="Mainframe terminal demo"
       className="w-full overflow-hidden rounded-xl border border-neon-sky/45 bg-[#05060f] text-left shadow-[0_0_32px_rgba(124,58,237,0.35)]"
     >
