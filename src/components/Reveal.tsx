@@ -1,28 +1,25 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { usePrefersReducedMotion } from '../lib/motion'
 
 type RevealProps = {
   children: ReactNode
 }
 
-// Should content just appear, with no animation? Yes when the visitor asked
-// for reduced motion, or when the browser can't tell us what's on screen.
-// Either way the content is never left invisible.
-function shouldSkipAnimation() {
-  const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
-  return reducedMotion || !('IntersectionObserver' in window)
-}
-
 // Fades and slides its children in the first time they scroll into view.
 function Reveal({ children }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const [visible, setVisible] = useState(shouldSkipAnimation)
+  // Content just appears (no animation) when the visitor asked for reduced motion,
+  // or when the browser can't tell us what's on screen. It's never left invisible.
+  const skipAnimation = usePrefersReducedMotion() || !('IntersectionObserver' in window)
+  const [revealed, setRevealed] = useState(false)
+  const visible = skipAnimation || revealed
 
   useEffect(() => {
     if (visible || !ref.current) return
     // IntersectionObserver tells us when the element enters the viewport.
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
-        setVisible(true)
+        setRevealed(true)
         observer.disconnect() // only animate once
       }
     })

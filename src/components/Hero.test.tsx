@@ -22,3 +22,8 @@ it('shows the avatar with alt text', () => {
   render(<Hero />)
   expect(screen.getByRole('img', { name: /Matthew/ })).toHaveAttribute('src', '/avatar.png')
 })
+
+it('renders the mainframe terminal', () => {
+  render(<Hero />)
+  expect(screen.getByLabelText('Mainframe terminal demo')).toBeInTheDocument()
+})
