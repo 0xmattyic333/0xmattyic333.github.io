@@ -1,8 +1,10 @@
 import type { Project } from './types'
 
 // To add a project:
-//   1. Put a screenshot in public/images/ (a wide image, around 1500x500, looks best).
-//   2. Copy the entry below, paste it at the top of the list, and edit every field.
+//   1. Copy an entry below, paste it at the top of the list, and edit every field.
+//   2. If it has a live site, run `npm run capture -- <id> <url>` and paste the
+//      image + media lines it prints. (No live site? Put a wide ~1500x500 image in
+//      public/images/ and point `image` at it instead.)
 //   3. Run `npm test`, then commit and push. The site redeploys on its own.
 export const projects: Project[] = [
   {
@@ -11,8 +13,14 @@ export const projects: Project[] = [
     description:
       'Official site for an esports team and streamer: live streams, team roster, weekly stream schedule, YouTube content, merch, and Discord.',
     tech: ['React', 'Vite', 'GitHub Pages', 'GoatCounter', 'Open Graph'],
-    image: '/images/tempr-banner.jpg',
-    imageAlt: 'TEMPR Esports banner',
+    image: '/media/tempr-esports/laptop.jpg',
+    imageAlt: 'TEMPR Esports site',
+    media: {
+      laptopVideo: '/media/tempr-esports/laptop.webm',
+      laptopVideoMp4: '/media/tempr-esports/laptop.mp4',
+      laptopPoster: '/media/tempr-esports/laptop.jpg',
+      phone: '/media/tempr-esports/phone.jpg',
+    },
     liveUrl: 'https://0xmattyic333.github.io/wolfeepackk_temprgg/',
     codeUrl: 'https://github.com/0xmattyic333/wolfeepackk_temprgg',
   },

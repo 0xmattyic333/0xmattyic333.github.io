@@ -1,5 +1,6 @@
 import type { Project } from '../data/types'
 import { card, externalLink, focusRing } from './styles'
+import DeviceMockup from './DeviceMockup'
 import Tilt from './Tilt'
 
 type ProjectCardProps = {
@@ -10,12 +11,17 @@ function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Tilt>
       <article className={`h-full overflow-hidden ${card}`}>
-        <img
-          src={project.image}
-          alt={project.imageAlt}
-          loading="lazy"
-          className="aspect-[3/1] w-full object-cover"
-        />
+        {/* Captured projects get the laptop + phone mockup; others show their own image. */}
+        {project.media ? (
+          <DeviceMockup media={project.media} alt={project.title} />
+        ) : (
+          <img
+            src={project.image}
+            alt={project.imageAlt}
+            loading="lazy"
+            className="aspect-[3/1] w-full object-cover"
+          />
+        )}
         <div className="p-5">
           <h3 className="text-lg font-bold text-white">{project.title}</h3>
           <p className="mt-2 text-sm text-muted">{project.description}</p>
