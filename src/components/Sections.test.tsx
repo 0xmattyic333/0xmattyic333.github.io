@@ -32,10 +32,11 @@ describe('Contact', () => {
     expect(screen.getByRole('heading', { name: "Let's work together." })).toBeInTheDocument()
   })
 
-  it('links to GitHub, Discord, and email', () => {
+  it('links to GitHub, Discord, X, and email', () => {
     render(<Contact />)
     expect(screen.getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/0xmattyic333')
     expect(screen.getByRole('link', { name: /Discord/ })).toHaveAttribute('href', 'https://discord.com/users/1429664465091297310')
+    expect(screen.getByRole('link', { name: /^X$/ })).toHaveAttribute('href', 'https://x.com/x0xmattyic333x')
     expect(screen.getByRole('link', { name: /Email/ })).toHaveAttribute('href', 'mailto:0xmattyic333@gmail.com')
   })
 

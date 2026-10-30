@@ -24,6 +24,6 @@ export type Badge = {
 }
 
 export type ContactLink = {
-  label: 'GitHub' | 'Discord' | 'Email'
+  label: 'GitHub' | 'Discord' | 'X' | 'Email'
   href: string
 }

@@ -32,7 +32,7 @@ src/
     projects.ts       your projects
     badges.ts         your certifications
     skills.ts         skill tags in About
-    contact.ts        GitHub / Discord / Email links
+    contact.ts        GitHub / Discord / X / Email links
   components/         one file per section (Hero, Projects, ...) plus helpers
     styles.ts         shared class strings (focus ring, card look, new-tab links)
     Reveal.tsx        the fade-in-on-scroll effect
