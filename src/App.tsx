@@ -1,4 +1,7 @@
 import { projects } from './data/projects'
+import About from './components/About'
+import Certifications from './components/Certifications'
+import Contact from './components/Contact'
 import Footer from './components/Footer'
 import GlowBackground from './components/GlowBackground'
 import Hero from './components/Hero'
@@ -15,6 +18,9 @@ function App() {
       <main>
         <Hero />
         <Projects items={projects} />
+        <Certifications />
+        <About />
+        <Contact />
       </main>
       <Footer />
     </>
