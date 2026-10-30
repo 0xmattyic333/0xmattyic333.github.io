@@ -48,7 +48,7 @@ src/
 
 ## Edit the About text
 
-Open `src/components/About.tsx` and rewrite the paragraph under `TODO(Matthew)`. Skill tags are in `src/data/skills.ts`.
+Open `src/components/About.tsx` and edit the paragraph. Skill tags are in `src/data/skills.ts`.
 
 ## Run it locally
 

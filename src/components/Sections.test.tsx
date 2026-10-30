@@ -20,6 +20,12 @@ describe('Certifications', () => {
 })
 
 describe('About', () => {
+  it("tells Matthew's story", () => {
+    render(<About />)
+    expect(screen.getByText(/every system is built on code/)).toBeInTheDocument()
+    expect(screen.getByText(/where most of the world's data flows/)).toBeInTheDocument()
+  })
+
   it('shows every skill tag', () => {
     render(<About />)
     for (const skill of skills) expect(screen.getByText(skill)).toBeInTheDocument()

@@ -4,11 +4,12 @@ import Section from './Section'
 function About() {
   return (
     <Section id="about" title="About">
-      {/* TODO(Matthew): make this yours. Rewrite it in your own words. */}
       <p className="max-w-2xl text-lg leading-relaxed text-slate-300">
-        I'm Matthew, a developer who builds fast, modern websites with React and TypeScript, and who
-        also works on IBM Z mainframes: COBOL, REXX, JCL, and automation with Ansible and Zowe. I like
-        taking an idea from blank page to live site 🕸️ 👨🏼‍💻, and I'm always learning something new 📚.
+        I got into coding when I realized that every system is built on code, from the COBOL running
+        behind banks to the websites we use every day. I build modern sites with React and
+        TypeScript, and I'm drawn to mainframes because that's where most of the world's data flows.
+        These days I spend my time going deep on both: shipping web projects and earning IBM Z
+        certifications. I'm open to freelance work.
       </p>
       <ul className="mt-8 flex flex-wrap gap-2">
         {skills.map((skill) => (
