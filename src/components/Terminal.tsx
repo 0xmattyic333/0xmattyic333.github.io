@@ -77,8 +77,8 @@ function Terminal() {
       {/* The animated screen is hidden from screen readers; they get the transcript below instead. */}
       <pre
         aria-hidden="true"
-        // break-all lets long JCL lines wrap inside the window on narrow phones.
-        className="min-h-64 px-4 py-3 font-mono text-xs leading-relaxed break-all whitespace-pre-wrap sm:text-sm"
+        // 11px fits the longest line on a 360px phone; break-words is a safety net for narrower screens.
+        className="min-h-64 px-4 py-3 font-mono text-[11px] leading-relaxed break-words whitespace-pre-wrap sm:text-sm"
       >
         {terminalScript.slice(0, done).map((line, i) => (
           <div key={i} className={toneClass[line.tone]}>

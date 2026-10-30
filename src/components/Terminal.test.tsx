@@ -44,3 +44,13 @@ it('types the job out and finishes with MAXCC=0000', () => {
   })
   expect(screenEl.textContent).toContain('MAXCC=0000')
 })
+
+// At 360px the window is ~296px wide; 11px monospace fits the longest 40-char line (~264px)
+// so lines like "...SUBMITTED" don't split mid-word.
+it('uses a phone-sized font that fits each line without mid-word breaks', () => {
+  mockReducedMotion(true)
+  const { container } = render(<Terminal />)
+  const screenEl = container.querySelector('pre')!
+  expect(screenEl).toHaveClass('text-[11px]')
+  expect(screenEl).not.toHaveClass('break-all')
+})

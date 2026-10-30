@@ -22,29 +22,59 @@ Built with **React**, **TypeScript**, and **Tailwind CSS**, bundled by **Vite**,
 ### Folder map
 
 ```
-public/               images served as-is (avatar, badges, project screenshots)
+public/               files served as-is
+  images/             avatar, badges, logos, Web3 graphic
+  media/<project-id>/ device media made by `npm run capture`
+scripts/
+  capture.mjs         records a project's laptop video + phone screenshot
 src/
   main.tsx            entry point: mounts <App /> into index.html
   App.tsx             the page, section by section
-  index.css           Tailwind import + theme colors
+  index.css           Tailwind import, theme colors, a few keyframe animations
+  lib/
+    motion.ts         usePrefersReducedMotion() and useCanHover(): every effect checks these
   data/               ← the content: edit these to change what the site says
     types.ts          the shape of a Project, Badge, ContactLink
     projects.ts       your projects
     badges.ts         your certifications
     skills.ts         skill tags in About
     contact.ts        GitHub / Discord / X / Email links
+    terminal.ts       the fake z/OS session the hero terminal plays
+    logos.ts          logos in the scrolling strip
   components/         one file per section (Hero, Projects, ...) plus helpers
     styles.ts         shared class strings (focus ring, card look, new-tab links)
-    Reveal.tsx        the fade-in-on-scroll effect
+    Reveal.tsx        fade-in on scroll
+    Terminal.tsx      the mainframe terminal in the hero
+    TypingLine.tsx    the self-typing line under the tagline
+    CursorGlow.tsx    the light that follows your mouse
+    Tilt.tsx          3D lean on project cards
+    DeviceMockup.tsx  laptop + phone frames around captured media
+    LogoMarquee.tsx   the scrolling logo strip
 ```
+
+### Motion, politely
+
+Every animated component checks two things first (see `src/lib/motion.ts`):
+
+- **Reduced motion:** if the visitor's device asks for less animation, everything holds still. The terminal shows the finished job, the typing line shows its first phrase, the logos stop, and videos show a still.
+- **Mouse vs touch:** the cursor glow follows a mouse, but on phones it drifts slowly on its own. Cards only tilt with a mouse.
+
+Videos only play while they're on screen, and the glow does no work in a hidden tab, which saves battery on phones.
 
 **The key idea:** the content is in `src/data/` and the look is in `src/components/`. You'll mostly edit data files.
 
-## Add a project in 3 steps
+## Add a project in 4 steps
 
-1. Drop a screenshot into `public/images/` (wide works best, around 1500×500).
-2. In `src/data/projects.ts`, copy the existing entry, paste it at the **top** of the list, and change every field. Leave out `liveUrl` or `codeUrl` if you don't have one, and that link won't show.
-3. Run `npm test`. If it passes, commit and push. The site updates in a minute or two.
+1. In `src/data/projects.ts`, copy an existing entry, paste it at the **top** of the list, and change every field. Leave out `liveUrl`, `codeUrl` or `links` if you don't have them, and those links won't show.
+2. If the project has a live site, make its laptop + phone visuals:
+   ```bash
+   npm run capture -- my-project https://example.com/
+   ```
+   Paste the `image` and `media` lines it prints into your entry. (No live site? Put a wide ~1500×500 image in `public/images/` and set `image` to it.)
+3. Run `npm test`.
+4. Commit and push. The site updates in a minute or two.
+
+The first time you capture, install the browser it uses: `npx playwright install chromium` (and `brew install ffmpeg` if you don't have it).
 
 ## Edit the About text
 
